@@ -13,7 +13,7 @@ import service.impl.AccountServiceImpl;
 /**
  * @author WangYao
  * @date 2020/4/14
- * @function 测试代码
+ * @function 测试 代码
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:bean.xml")
