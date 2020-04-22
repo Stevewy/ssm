@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author WangYao
  * @date 2020/4/13
- * @function
+ * @function 接口
  */
 public interface AccountDao {
 
