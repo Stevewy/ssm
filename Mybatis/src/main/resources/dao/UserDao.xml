@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+    <!--开启支持二级缓存-->
+    <cache/><!--在后面加上useCache=true-->
+    <resultMap id="userAccountMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <result property="username" column="username"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="accounts" ofType="entity.Account">
+            <id property="id" column="aid"></id>
+            <result property="uid" column="uid"></result>
+            <result property="money" column="money"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="userAccountMap2" type="user">
+        <id property="id" column="id"></id>
+        <result property="sex" column="sex"></result>
+        <result property="address" column="address"></result>
+        <result property="username" column="username"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="accounts" ofType="entity.Account" select="dao.AccountDao.findByUid" column="id"></collection>
+    </resultMap>
+    <!--使用时,使用include标签-->
+    <sql id="default">
+        select * from user
+    </sql>
+
+    <insert id="saveUser" parameterType="entity.User">
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        insert into user(username,address,sex,birthday)values (#{username},#{address},#{sex},#{birthday});
+    </insert>
+
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id = #{userid};
+    </delete>
+
+    <update id="updateUser" parameterType="entity.User">
+        update user set username=#{username},address=#{address},sex=#{sex},birthday=#{birthday} where id = #{id};
+    </update>
+
+    <select id="findAll" resultType="entity.User">
+        select * from user;
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="entity.User">
+        select * from user where id = #{id};
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="entity.User">
+        select * from user where username like #{username};
+        /*select * from user where username like '%${value}%';*/
+    </select>
+
+    <select id="findTotal" resultType="int">
+        select count(*) from user;
+    </select>
+
+    <select id="findByVo" parameterType="entity.QueryVo" resultType="entity.User">
+        select * from user where username like #{user.username};
+    </select>
+
+    <select id="findByCondition" parameterType="entity.User" resultType="entity.User">
+        select * from user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null">
+                and username = #{username}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+            <if test="address != null">
+                and address = #{address}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByIds" parameterType="entity.QueryVo" resultType="entity.User">
+        select * from user
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                <foreach collection="ids" open="and id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--<select id="findAllUserAndAccount" resultMap="userAccountMap">
+        select u.*, a.id as aid, a.money from user as u left outer join account as a on a.uid = u.id
+    </select>-->
+
+    <!--延迟加载-->
+    <select id="findAllUserAndAccount" resultMap="userAccountMap2">
+        select * from user;
+    </select>
+</mapper>
