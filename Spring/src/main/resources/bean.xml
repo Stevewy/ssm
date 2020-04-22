@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--bean的创建
+            三种
+        bean的作用范围
+            singleton  单例
+            prototype  多例
+            request  web请求
+            session  web会话
+            global-session  集群会话
+        bean的生命周期
+            单例
+                容器创建到容器销毁
+            多例
+                使用到不用(垃圾回收)
+        -->
+
+    <!--使用默认构造函数-->
+    <bean id="accountService" class="service.impl.AccountServiceImpl"></bean>
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="all" expression="execution( * service.impl.*.*(..))"></aop:pointcut>
+        <!--id是切面的标识,ref是通知类bean的id-->
+        <aop:aspect id="logAdvice" ref="manager">
+            <!--before表示前置通知, pointcut切入点表达式 execution 访问类型(可省) 返回值(通配符) 包名..表示当前包及子包 类名 方法-->
+            <!--通配写法 * *..*.*(..) -->
+            <!--一般写法 * service.impl.*.*(..)-->
+            <aop:before method="begin" pointcut-ref="all"></aop:before>
+            <aop:after-returning method="commit"  pointcut-ref="all"></aop:after-returning>
+            <aop:after-throwing method="rollback" pointcut-ref="all"></aop:after-throwing>
+            <aop:after method="release" pointcut-ref="all"></aop:after>
+            <!--加上这个就比较诡异-->
+            <!--<aop:around method="stop" pointcut-ref="all"></aop:around>-->
+        </aop:aspect>
+    </aop:config>
+
+    <!--使用工厂-->
+    <bean id="factory" class="service.factory.Factory"></bean>
+    <bean id="beanFactory" factory-bean="factory" factory-method="getBeanFactory"></bean>
+    <!--使用静态方法-->
+    <bean id="beanFactoryStatic" class="service.factory.Factory" factory-method="getBeanFactoryStatic"></bean>
+
+    <!--依赖注入
+        Dependency Injection
+        三类:
+            基本类型和String
+            bean对象
+            集合
+        方式:
+            构造函数
+            set方法
+            注解
+    -->
+
+    <!--构造函数注入
+        constructor-arg标签
+        type: 指定数据类型
+        index: 索引
+        name: 指定名称
+        value: 基本类型和String
+        ref: 其他bean
+    -->
+    <bean id="now" class="java.util.Date"></bean>
+    <bean id="userByConstructor" class="entity.User">
+        <constructor-arg name="username" value="张三"></constructor-arg>
+        <constructor-arg name="id" value="1"></constructor-arg>
+        <constructor-arg name="sex" value="男"></constructor-arg>
+        <constructor-arg name="address" value="未知"></constructor-arg>
+        <constructor-arg name="birthday" ref="now"></constructor-arg>
+    </bean>
+
+    <!--set注入
+        property标签
+        name
+        value
+        ref
+    -->
+    <bean id="userBySet" class="entity.User">
+        <property name="id" value="1"></property>
+    </bean>
+
+    <bean id="accountDao" class="dao.impl.AccountDaoImpl">
+        <property name="dataSource" ref="dateSource"></property>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dateSource"></property>
+    </bean>
+    <bean id="dateSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/test"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="wangyao"></property>
+    </bean>
+
+    <!--<bean id="proxyAccountService" factory-bean="accountServiceFactory" factory-method="getAccountService"></bean>-->
+    <bean id="accountServiceFactory" class="service.factory.AccountServiceFactory">
+        <property name="accountService" ref="accountService"></property>
+        <property name="manager" ref="manager"></property>
+    </bean>
+    <bean id="manager" class="utils.TransactionManager">
+        <property name="connectionUtil" ref="connectionUtil"></property>
+    </bean>
+    <bean id="connectionUtil" class="utils.ConnectionUtil">
+        <property name="dataSource" ref="dateSource"></property>
+    </bean>
+    <!--集合注入
+        在上面方法里面加子标签<array><set><list> <map><props>  里面在加上value标签赋值(map使用entry)
+    -->
+
+</beans>
