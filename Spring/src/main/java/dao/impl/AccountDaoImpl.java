@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author WangYao
  * @date 2020/4/13
- * @function dao实现类
+ * @function dao实现类 目前使用jdbcTemplate,以后会改成mybatis
  */
 @Repository("accountDao")
 public class AccountDaoImpl extends JdbcDaoSupport /*如果继承,就只能使用xml配置,不继承都可*/ implements AccountDao {
