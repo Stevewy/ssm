@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties>
+        <!--可以将其放到外部,不写在源代码里面
+            resource="XXX.xxx"
+            url=""  file协议
+        -->
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+        <property name="username" value="root"/>
+        <property name="password" value="wangyao"/>
+    </properties>
+
+    <settings>
+        <!--延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <!--配置别名-->
+    <typeAliases>
+        <typeAlias type="entity.User" alias="user"></typeAlias>
+        <package name="entity"></package>
+    </typeAliases>
+
+    <!--配置环境-->
+    <environments default="mysql">
+        <environment id="mysql">
+            <!--事务类型-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--配置数据源(连接池
+            POOLED     DataSource 规范数据库连接池
+            UNPOOLED   没有池的思想
+            JNDI(模仿注册表)       服务器提供JNDI,非web或maven的war不能使用
+                key director(固定)+name(指定)   value  object对象
+                部署到服务器,java代码在jsp文件中
+            )-->
+            <dataSource type="POOLED">
+                <!--基本信息-->
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+                <property name="username" value="root"/>
+                <property name="password" value="wangyao"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--xml方法,我竟然写的.而不是/-->
+        <!--<mapper resource="dao/UserDao.xml"/>-->
+        <!--注解方法-->
+        <!--<mapper class="dao.UserDao"/>-->
+        <package name="dao"></package>  <!--写了就不用上面了-->
+    </mappers>
+</configuration>
+
+<!--目前未实现多对多(我实际开发未使用),但是比较简单,主要注意一下sql语句,分清楚谁是主体,两次左外搞定-->
