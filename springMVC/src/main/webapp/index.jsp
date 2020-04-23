@@ -12,6 +12,7 @@
 </head>
 <body>
     <h3>Hello World</h3>
-    <a href="hello">Say Hello</a>
+    <%--超链接,发生请求--%>
+    <a href="hello/say">Say Hello</a>
 </body>
 </html>
