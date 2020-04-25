@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author WangYao
@@ -17,4 +18,5 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String name;
+    private Date birthday;
 }
