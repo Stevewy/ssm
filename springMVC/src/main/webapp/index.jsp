@@ -25,5 +25,10 @@
         <input type="submit" name="提交"/><br/>
     </form>
 
+    <form action="param/converter" method="post">
+        用户姓名<input type="text" name="name">
+        用户生日<input type="text" name="birthday">
+        <input type="submit" name="提交"/><br/>
+    </form>
 </body>
 </html>
