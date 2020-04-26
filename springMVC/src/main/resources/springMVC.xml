@@ -32,4 +32,7 @@
     <!--开启SpringMVC注解支持-->
     <mvc:annotation-driven conversion-service="conversionService"/>
 
+    <!--不拦截js文件夹下面-->
+    <mvc:default-servlet-handler/>
+
 </beans>
