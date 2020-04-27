@@ -23,7 +23,8 @@ public class ParamController {
 
     @RequestMapping("/hello")
     public String param(@RequestParam(name = "name") String name){
-        return name;
+        System.out.println(name);
+        return "Hello";
     }
 
     @RequestMapping("/bean")
