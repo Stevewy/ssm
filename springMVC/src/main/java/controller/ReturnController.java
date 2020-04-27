@@ -3,7 +3,9 @@ package controller;
 import entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,5 +62,14 @@ public class ReturnController {
 //        return "forward:/WEB-INF/pages/Hello.jsp";
 //        redirect重定向,不能进文件夹
         return "redirect:/index.jsp";
+    }
+
+    //这个返回值不是跳转页面,而是到success,使用@ResponseBody可以使User转JavaBean
+    @RequestMapping("/testAjax")
+    public @ResponseBody User testAjax(@RequestBody User body){ //json转JavaBean, 有现成的包, 只要json的key与JavaBean的属性名一样
+        System.out.println(body.getName());
+        User user = new User();
+        user.setName("王耀");
+        return user;
     }
 }
