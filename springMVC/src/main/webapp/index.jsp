@@ -16,23 +16,21 @@
         // 页面加载，绑定单击事件
         $(function(){
             $("#btn").click(function(){
-                alert("hello btn");
+                // alert("hello btn");
                 // 发送ajax请求
-                // $.ajax({
-                //     // 编写json格式，设置属性和值
-                //     url:"user/testAjax",
-                //     contentType:"application/json;charset=UTF-8",
-                //     data:'{"username":"hehe","password":"123","age":30}',
-                //     dataType:"json",
-                //     type:"post",
-                //     success:function(data){
-                //         // data服务器端响应的json的数据，进行解析
-                //         alert(data);
-                //         alert(data.username);
-                //         alert(data.password);
-                //         alert(data.age);
-                //     }
-                // });
+                $.ajax({
+                    // 编写json格式，设置属性和值
+                    url:"return/testAjax",
+                    contentType:"application/json;charset=UTF-8",
+                    data:'{"name":"王耀"}',
+                    dataType:"json",
+                    type:"post",
+                    success:function(data){
+                        // data服务器端响应的json的数据，进行解析
+                        alert(data);
+                        alert(data.name);
+                    }
+                });
 
             });
         });
@@ -72,6 +70,20 @@
 
     <a href="return/forwardOfRedirect">使用forward和redirect请求转发</a><br/>
 
-    <button id="btn">发生ajax请求</button>
+    <button id="btn">发生ajax请求</button><br/>
+
+    <form action="file/upLoad" enctype="multipart/form-data" method="post">
+        选择文件:<input type="file" name="upload"/><br/>
+        <input type="submit" value="上传">
+    </form><br/>
+
+    <%--使用MultipartFile--%>
+    <form action="file/upload2" enctype="multipart/form-data" method="post">
+        选择文件:<input type="file" name="upload"/><br/>
+        <input type="submit" value="上传">
+    </form><br/>
+
+    <br/><br/>
+    <a href="Exception/Exception">测试异常</a><br/>
 </body>
 </html>
