@@ -1,5 +1,7 @@
 package controller;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -54,6 +56,20 @@ public class FileController {
 
         String name = upload.getOriginalFilename();
         upload.transferTo(new File(path, name));
+        return "Hello";
+    }
+
+    //跨服务器上传
+    @RequestMapping("upload3")
+    public String fileUpload3(MultipartFile upload) throws Exception {
+        String path = "";//写你要上传服务器的地址,http开头
+        String name = upload.getOriginalFilename();
+
+        //创建客户机,去连接服务器,再上传
+        Client client = Client.create();
+        WebResource resource = client.resource(path + "/" + name);
+        resource.put(upload.getBytes());
+
         return "Hello";
     }
 }
