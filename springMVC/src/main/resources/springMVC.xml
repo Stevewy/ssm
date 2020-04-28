@@ -24,13 +24,30 @@
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
             <set>
-                <bean class="utils.DateConverter"></bean>
+                <bean class="utils.DateConverter"/>
             </set>
         </property>
     </bean>
 
+    <!--文件解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/><!--10MB-->
+    </bean>
+
+    <!--异常处理器-->
+    <bean id="sysExceptionResolver" class="exception.SysExceptionResolver"/>
+
     <!--开启SpringMVC注解支持-->
     <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--要拦截的方法<mvc:exclude-mapping> 是不拦截的方法-->
+            <mvc:mapping path="/hello/say"/>
+            <!--拦截器-->
+            <bean class="controller.interceptor.all"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!--不拦截js文件夹下面-->
     <mvc:default-servlet-handler/>
