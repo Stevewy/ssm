@@ -45,7 +45,9 @@
     <!--事务通知-->
     <tx:advice id="txAdvice" transaction-manager="manager">
         <tx:attributes>
+            <!--对于查找(find开头),是只读-->
             <tx:method name="find*" read-only="true"/>
+            <!--所以都是默认-->
             <tx:method name="*" isolation="DEFAULT"/>
         </tx:attributes>
     </tx:advice>
